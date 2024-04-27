@@ -145,11 +145,12 @@ export class BinaryReader {
         return value;
     }
 
-    public readU32(): u32 {
+    public readU32(le: boolean = true): u32 {
         this.verifyEnd(this.currentOffset + 4);
 
-        const value = this.buffer.getUint32(this.currentOffset, true);
+        const value = this.buffer.getUint32(this.currentOffset, le);
         this.currentOffset += 4;
+
         return value;
     }
 
@@ -217,7 +218,7 @@ export class BinaryReader {
     }
 
     public readSelector(): Selector {
-        return this.readU32();
+        return this.readU32(false);
     }
 
     public readStringWithLength(): string {
