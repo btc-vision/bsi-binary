@@ -14,6 +14,7 @@ import {
     u64,
     u8,
 } from './types/math.js';
+
 import { BufferHelper } from '../utils/BufferHelper';
 
 export class BinaryWriter {
