@@ -1,4 +1,3 @@
-import { BufferHelper } from '../../utils/BufferHelper.js';
 import { BinaryReader } from './BinaryReader.js';
 import {
     Address,
@@ -15,6 +14,7 @@ import {
     u64,
     u8,
 } from './types/math.js';
+import { BufferHelper } from '../utils/BufferHelper';
 
 export class BinaryWriter {
     private currentOffset: u32 = 0;
