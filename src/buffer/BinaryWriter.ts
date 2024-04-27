@@ -1,4 +1,3 @@
-import { BinaryReader } from './BinaryReader.js';
 import {
     Address,
     ADDRESS_BYTE_LENGTH,
@@ -16,6 +15,7 @@ import {
 } from './types/math.js';
 
 import { BufferHelper } from '../utils/BufferHelper';
+import { BinaryReader } from './BinaryReader';
 
 export class BinaryWriter {
     private currentOffset: u32 = 0;
@@ -34,9 +34,9 @@ export class BinaryWriter {
         this.currentOffset += 2;
     }
 
-    public writeU32(value: u32): void {
+    public writeU32(value: u32, le: boolean = true): void {
         this.allocSafe(4);
-        this.buffer.setUint32(this.currentOffset, value, true);
+        this.buffer.setUint32(this.currentOffset, value, le);
         this.currentOffset += 4;
     }
 
@@ -46,7 +46,7 @@ export class BinaryWriter {
     }
 
     public writeSelector(value: Selector): void {
-        this.writeU32(value);
+        this.writeU32(value, false);
     }
 
     public writeBoolean(value: boolean): void {
