@@ -1,4 +1,4 @@
-import { MemorySlotPointer } from '../buffer/types/math';
+import { MemorySlotPointer } from '../buffer/types/math.js';
 
 export class BufferHelper {
     public static readonly EXPECTED_BUFFER_LENGTH: number = 32;
