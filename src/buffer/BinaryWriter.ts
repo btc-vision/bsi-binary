@@ -14,8 +14,8 @@ import {
     u8,
 } from './types/math.js';
 
-import { BufferHelper } from '../utils/BufferHelper';
-import { BinaryReader } from './BinaryReader';
+import { BufferHelper } from '../utils/BufferHelper.js';
+import { BinaryReader } from './BinaryReader.js';
 
 export class BinaryWriter {
     private currentOffset: u32 = 0;

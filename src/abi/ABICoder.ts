@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import { BinaryReader } from '../buffer/BinaryReader';
-import { BufferHelper } from '../utils/BufferHelper';
+import { BinaryReader } from '../buffer/BinaryReader.js';
+import { BufferHelper } from '../utils/BufferHelper.js';
 
 export enum ABIDataTypes {
     UINT8 = 'UINT8',
