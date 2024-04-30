@@ -1,13 +1,7 @@
 name: Build Package CI
 on:
-  pull_request:
-    # For the develop branch only.
-    branches:
-      - main
-    # Execute the action on closed (merged) PR.
-    types:
-      [closed]
-    workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
   publish-gpr:
