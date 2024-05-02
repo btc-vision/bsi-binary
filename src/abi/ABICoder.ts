@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash } from 'crypto';
 import { BinaryReader } from '../buffer/BinaryReader.js';
 import { BufferHelper } from '../utils/BufferHelper.js';
 
