@@ -21,6 +21,10 @@
         "setup": "npm npm i && npm run build",
         "install": "gulp && gulp cjs"
     },
+    "browser": {
+        "crypto": false,
+        "stream": false
+    },
     "author": "BlobMaster41",
     "license": "LICENSE.MD",
     "devDependencies": {
@@ -38,7 +42,6 @@
         "@types/debug": "^4.1.12",
         "@types/jest": "^29.5.12",
         "babel-plugin-transform-import-meta": "^2.2.1",
-        "crypto": "^1.0.1",
         "ecpair": "^2.1.0",
         "gulp": "^4.0.2",
         "gulp-cached": "^1.1.1",
