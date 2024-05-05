@@ -1,7 +1,7 @@
 {
     "type": "module",
     "name": "@btc-vision/bsi-binary",
-    "version": "1.0.6",
+    "version": "1.0.8",
     "description": "",
     "main": "build/index.js",
     "types": "build/index.d.ts",
@@ -12,6 +12,10 @@
             "require": "./cjs/index.js",
             "types": "./src/index.ts"
         }
+    },
+    "browser": {
+        "crypto": "crypto-browserify",
+        "stream": "stream-browserify"
     },
     "scripts": {
         "watch": "gulp watch",
