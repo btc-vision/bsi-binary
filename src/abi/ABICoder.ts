@@ -1,4 +1,5 @@
-import { createHash } from 'crypto';
+import shajs from 'sha.js';
+
 import { BinaryReader } from '../buffer/BinaryReader.js';
 import { BufferHelper } from '../utils/BufferHelper.js';
 
@@ -111,6 +112,6 @@ export class ABICoder {
     }
 
     private sha256(buffer: Buffer | string | Uint8Array): Buffer {
-        return createHash('sha256').update(buffer).digest();
+        return new shajs.sha256().update(buffer).digest();
     }
 }
