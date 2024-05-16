@@ -5,7 +5,7 @@ import {
     ADDRESS_BYTE_LENGTH,
     ContractABIMap,
     f32,
-    i32,
+    i32, MAX_EVENT_DATA_SIZE, MAX_EVENTS,
     MethodMap,
     PointerStorage,
     PropertyABIMap,
@@ -33,7 +33,11 @@ export class BinaryReader {
 
     public readEvents(): NetEvent[] {
         const events: NetEvent[] = [];
-        const length = this.readU32();
+        const length = this.readU8();
+
+        if(length > MAX_EVENTS) {
+            throw new Error('Too many events to decode.');
+        }
 
         for (let i = 0; i < length; i++) {
             const event = this.readEvent();
@@ -46,13 +50,18 @@ export class BinaryReader {
 
     public readEvent(): NetEvent {
         const eventType = this.readStringWithLength();
-        const eventData = this.readBytesWithLength();
+        const eventDataSelector = this.readU64();
+        const eventData = this.readBytesWithLength(MAX_EVENT_DATA_SIZE);
 
-        return new NetEvent(eventType, eventData);
+        return new NetEvent(eventType, eventDataSelector, eventData);
     }
 
-    public readBytesWithLength(): Uint8Array {
+    public readBytesWithLength(maxLength: number = 0): Uint8Array {
         const length = this.readU32();
+
+        if(maxLength > 0 && length > maxLength) {
+            throw new Error('Data length exceeds maximum length.');
+        }
 
         return this.readBytes(length);
     }
@@ -155,10 +164,10 @@ export class BinaryReader {
     }
 
     public readU64(): bigint {
-        const low = BigInt(this.readU32());
-        const high = BigInt(this.readU32());
+        const val = this.buffer.getBigUint64(this.currentOffset, true);
+        this.currentOffset += 8;
 
-        return (BigInt(high) << 32n) | low;
+        return val;
     }
 
     public readStorage(): Map<Address, PointerStorage> {

@@ -1,6 +1,7 @@
 export class NetEvent {
     public constructor(
-        public eventType: string,
-        public eventData: Uint8Array,
+        public readonly eventType: string,
+        public readonly eventDataSelector: bigint,
+        public readonly eventData: Uint8Array,
     ) {}
 }

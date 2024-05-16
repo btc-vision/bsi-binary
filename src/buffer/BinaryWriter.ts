@@ -16,33 +16,57 @@ import {
 
 import { BufferHelper } from '../utils/BufferHelper.js';
 import { BinaryReader } from './BinaryReader.js';
+import { cyrb53a } from '../utils/cyrb53.js';
+
+export enum BufferDataType {
+    U8 = 0,
+    U16 = 1,
+    U32 = 2,
+    U64 = 3,
+    U256 = 4,
+    ADDRESS = 5,
+    STRING = 6,
+    BOOLEAN = 7,
+}
 
 export class BinaryWriter {
     private currentOffset: u32 = 0;
-    private buffer: DataView = new DataView(new ArrayBuffer(ADDRESS_BYTE_LENGTH));
+    private buffer: DataView;
 
-    constructor() {}
+    private selectorDatatype: u8[] = [];
+
+    constructor(length: number = 4, private readonly trackDataTypes: boolean = false) {
+        this.buffer = this.getDefaultBuffer(length);
+    }
 
     public writeU8(value: u8): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U8);
+
         this.allocSafe(1);
         this.buffer.setUint8(this.currentOffset++, value);
     }
 
     public writeU16(value: u16): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U16);
+
         this.allocSafe(2);
         this.buffer.setUint16(this.currentOffset, value, true);
         this.currentOffset += 2;
     }
 
     public writeU32(value: u32, le: boolean = true): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U32);
+
         this.allocSafe(4);
         this.buffer.setUint32(this.currentOffset, value, le);
         this.currentOffset += 4;
     }
 
     public writeU64(value: u64): void {
-        this.writeU32(Number(value));
-        this.writeU32(Number(value >> 32n));
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U64);
+
+        this.allocSafe(8);
+        this.buffer.setBigUint64(this.currentOffset, value, true);
     }
 
     public writeSelector(value: Selector): void {
@@ -50,10 +74,14 @@ export class BinaryWriter {
     }
 
     public writeBoolean(value: boolean): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.BOOLEAN);
+
         this.writeU8(value ? 1 : 0);
     }
 
     public writeU256(bigIntValue: bigint): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U256);
+
         const bytesToHex = BufferHelper.valueToUint8Array(bigIntValue);
         if (bytesToHex.byteLength !== 32) {
             console.log('Invalid u256 value:', bytesToHex);
@@ -73,12 +101,16 @@ export class BinaryWriter {
     }
 
     public writeString(value: string): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.STRING);
+
         for (let i: i32 = 0; i < value.length; i++) {
             this.writeU8(value.charCodeAt(i));
         }
     }
 
     public writeAddress(value: Address): void {
+        if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.ADDRESS);
+
         const bytes = this.fromAddress(value);
 
         this.writeBytes(bytes);
@@ -112,21 +144,20 @@ export class BinaryWriter {
         );
     }
 
-    public getBuffer(): Uint8Array {
+    public getBuffer(clear: boolean = true): Uint8Array {
         const buf = new Uint8Array(this.buffer.byteLength);
         for (let i: u32 = 0; i < this.buffer.byteLength; i++) {
             buf[i] = this.buffer.getUint8(i);
         }
 
-        this.clear();
+        if(clear) this.clear();
 
         return buf;
     }
 
     public reset(): void {
         this.currentOffset = 0;
-
-        this.buffer = new DataView(new ArrayBuffer(4));
+        this.buffer = this.getDefaultBuffer(4);
     }
 
     public writeStorage(storage: BlockchainStorage): void {
@@ -181,6 +212,7 @@ export class BinaryWriter {
     public clear(): void {
         this.currentOffset = 0;
         this.buffer = new DataView(new ArrayBuffer(4));
+        this.selectorDatatype = [];
     }
 
     public allocSafe(size: u32): void {
@@ -192,6 +224,14 @@ export class BinaryWriter {
     public writeABISelector(name: string, selector: Selector): void {
         this.writeStringWithLength(name);
         this.writeSelector(selector);
+    }
+
+    public getSelectorDataType(): bigint {
+        let hash: bigint = 0n;
+
+        if (this.selectorDatatype.length === 0) return hash;
+
+        return cyrb53a(this.selectorDatatype);
     }
 
     private getChecksum(): u32 {
@@ -244,5 +284,9 @@ export class BinaryWriter {
         }
 
         this.buffer = new DataView(buf.buffer);
+    }
+
+    private getDefaultBuffer(length: number = 0): DataView {
+        return new DataView(new ArrayBuffer(length));
     }
 }
