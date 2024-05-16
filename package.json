@@ -1,8 +1,9 @@
 {
     "type": "module",
     "name": "@btc-vision/bsi-binary",
-    "version": "1.0.15",
-    "description": "",
+    "version": "1.0.16",
+	"author": "BlobMaster41",
+    "description": "OPNet official buffer serialization and deserialization library",
     "main": "build/index.js",
     "types": "build/index.d.ts",
     "typings": "build/index.d.ts",
@@ -21,11 +22,11 @@
         "setup": "npm npm i && npm run build",
         "install": "gulp && gulp cjs"
     },
+    "homepage": "https://opnet.org",
     "browser": {
         "crypto": false,
         "stream": false
     },
-    "author": "BlobMaster41",
     "license": "LICENSE.MD",
     "devDependencies": {
         "@babel/preset-env": "^7.24.3",
@@ -53,5 +54,20 @@
         "tiny-secp256k1": "^2.2.3",
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/btc-vision/bsi-binary.git"
+    },
+    "keywords": [
+        "opnet",
+        "bitcoin",
+        "btc",
+        "bitcoin smart contracts",
+        "smart inscriptions",
+        "bsi",
+        "bsi-binary",
+        "ordinals",
+        "buffer"
+    ]
 }
