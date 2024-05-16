@@ -164,10 +164,12 @@ export class BinaryReader {
     }
 
     public readU64(): bigint {
-        const val = this.buffer.getBigUint64(this.currentOffset, true);
+        this.verifyEnd(this.currentOffset + 8);
+
+        const value: bigint = this.buffer.getBigUint64(this.currentOffset, true);
         this.currentOffset += 8;
 
-        return val;
+        return value;
     }
 
     public readStorage(): Map<Address, PointerStorage> {
