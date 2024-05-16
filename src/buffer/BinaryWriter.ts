@@ -67,6 +67,7 @@ export class BinaryWriter {
 
         this.allocSafe(8);
         this.buffer.setBigUint64(this.currentOffset, value, true);
+        this.currentOffset += 8;
     }
 
     public writeSelector(value: Selector): void {
@@ -82,6 +83,8 @@ export class BinaryWriter {
     public writeU256(bigIntValue: bigint): void {
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U256);
 
+        this.allocSafe(32);
+
         const bytesToHex = BufferHelper.valueToUint8Array(bigIntValue);
         if (bytesToHex.byteLength !== 32) {
             console.log('Invalid u256 value:', bytesToHex);
@@ -95,6 +98,8 @@ export class BinaryWriter {
     }
 
     public writeBytes(value: Uint8Array | Buffer): void {
+        this.allocSafe(value.byteLength);
+
         for (let i = 0; i < value.byteLength; i++) {
             this.writeU8(value[i]);
         }
@@ -102,6 +107,7 @@ export class BinaryWriter {
 
     public writeString(value: string): void {
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.STRING);
+        this.allocSafe(value.length);
 
         for (let i: i32 = 0; i < value.length; i++) {
             this.writeU8(value.charCodeAt(i));
@@ -112,13 +118,13 @@ export class BinaryWriter {
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.ADDRESS);
 
         const bytes = this.fromAddress(value);
-
         this.writeBytes(bytes);
     }
 
     public writeStringWithLength(value: string): void {
-        this.writeU16(value.length);
+        this.allocSafe(value.length + 2);
 
+        this.writeU16(value.length);
         this.writeString(value);
     }
 
@@ -190,6 +196,7 @@ export class BinaryWriter {
     }
 
     public writeTuple(values: bigint[]): void {
+        this.allocSafe(4 + values.length * 32);
         this.writeU32(values.length);
 
         for (let i = 0; i < values.length; i++) {
