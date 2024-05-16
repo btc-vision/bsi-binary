@@ -35,7 +35,7 @@ export class BinaryWriter {
 
     private selectorDatatype: u8[] = [];
 
-    constructor(length: number = 4, private readonly trackDataTypes: boolean = false) {
+    constructor(length: number = 0, private readonly trackDataTypes: boolean = false) {
         this.buffer = this.getDefaultBuffer(length);
     }
 
@@ -218,7 +218,7 @@ export class BinaryWriter {
 
     public clear(): void {
         this.currentOffset = 0;
-        this.buffer = new DataView(new ArrayBuffer(4));
+        this.buffer = this.getDefaultBuffer();
         this.selectorDatatype = [];
     }
 
