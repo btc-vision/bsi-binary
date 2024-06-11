@@ -172,6 +172,50 @@ export class BinaryReader {
         return value;
     }
 
+    public readMultiBytesAddressMap(): Map<Address, Uint8Array[]> {
+        const map: Map<Address, Uint8Array[]> = new Map<Address, Uint8Array[]>();
+        const size: u8 = this.readU8();
+
+        if(size > 8) {
+            throw new Error('Too many contract called.');
+        }
+
+        for (let i: u8 = 0; i < size; i++) {
+            const address: Address = this.readAddress();
+            const responseSize: u8 = this.readU8();
+
+            if(responseSize > 10) {
+                throw new Error('Too many calls.');
+            }
+
+            const calls: Uint8Array[] = [];
+            for (let j: u8 = 0; j < responseSize; j++) {
+                const response: Uint8Array = this.readBytesWithLength();
+                calls.push(response);
+            }
+
+            map.set(address, calls);
+        }
+
+        return map;
+    }
+
+    public readAddressValueTuple(): Map<Address, bigint> {
+        const length = this.readU16();
+        const result = new Map<Address, bigint>();
+
+        for (let i = 0; i < length; i++) {
+            const address = this.readAddress();
+            const value = this.readU256();
+
+            if (result.has(address)) throw new Error('Duplicate address found in map');
+
+            result.set(address, value);
+        }
+
+        return result;
+    }
+
     public readStorage(): Map<Address, PointerStorage> {
         const contractsSize: u32 = this.readU32();
         const storage: Map<Address, PointerStorage> = new Map();

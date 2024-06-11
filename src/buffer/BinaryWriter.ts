@@ -266,6 +266,50 @@ export class BinaryWriter {
         });
     }
 
+    public writeAddressValueTupleMap(map: Map<Address, bigint>): void {
+        if (map.size > 65535) throw new Error('Map size is too large');
+
+        this.writeU16(map.size);
+
+        const keys = Array.from(map.keys());
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            const value = map.get(key);
+
+            if(value === null || value === undefined) throw new Error('Value not found');
+
+            this.writeAddress(key);
+            this.writeU256(value);
+        }
+    }
+
+    public writeLimitedAddressBytesMap(map: Map<Address, Uint8Array[]>): void {
+        if (map.size > 8) throw new Error('Too many contract calls');
+
+        this.writeU8(map.size);
+
+        const keys: Address[] = Array.from(map.keys());
+        for (let i: i32 = 0; i < keys.length; i++) {
+            const address: Address = keys[i];
+            const calls: Uint8Array[] | undefined = map.get(address);
+
+            if(!calls) throw new Error('Calls not found');
+            if(calls.length > 10) throw new Error('Too many calls.');
+
+            this.writeAddress(address);
+            this.writeU8(calls.length);
+
+            for (let j: i32 = 0; j < calls.length; j++) {
+                this.writeBytesWithLength(calls[j]);
+            }
+        }
+    }
+
+    public writeBytesWithLength(value: Uint8Array): void {
+        this.writeU32(value.length);
+        this.writeBytes(value);
+    }
+
     private fromAddress(value: Address): Uint8Array {
         if (value.length > ADDRESS_BYTE_LENGTH) {
             throw new Error('Address is too long');
