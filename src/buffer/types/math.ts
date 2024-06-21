@@ -23,9 +23,9 @@ export interface ABIRegistryItem {
 }
 
 export type ContractABIMap = Set<Selector>;
-export type PropertyABIMap = Map<string, Selector>;
-export type SelectorsMap = Map<Address, PropertyABIMap>;
-export type MethodMap = Map<Address, ContractABIMap>;
+export type SelectorsMap = Map<string, Selector>;
+
+export type MethodMap = Set<Selector>;
 
 export const MAX_EVENT_DATA_SIZE: number = 256; // 256 bytes max
 export const MAX_EVENTS: number = 8; // 8 events max per transactions.

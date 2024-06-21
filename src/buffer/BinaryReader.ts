@@ -8,7 +8,6 @@ import {
     i32, MAX_EVENT_DATA_SIZE, MAX_EVENTS,
     MethodMap,
     PointerStorage,
-    PropertyABIMap,
     Selector,
     SelectorsMap,
     u16,
@@ -66,19 +65,6 @@ export class BinaryReader {
         return this.readBytes(length);
     }
 
-    public readSelectors(): PropertyABIMap {
-        const selectors: PropertyABIMap = new Map();
-        const length = this.readU16();
-
-        for (let i = 0; i < length; i++) {
-            const selectorData = this.readABISelector();
-
-            selectors.set(selectorData.name, selectorData.selector);
-        }
-
-        return selectors;
-    }
-
     public readABISelector(): ABIRegistryItem {
         const name = this.readStringWithLength();
         const selector = this.readSelector();
@@ -91,11 +77,11 @@ export class BinaryReader {
 
     public readViewSelectorsMap(): SelectorsMap {
         const map: SelectorsMap = new Map();
-
         const length = this.readU16();
+
         for (let i = 0; i < length; i++) {
-            const key = this.readAddress();
-            const value = this.readSelectors();
+            const key = this.readStringWithLength();
+            const value = this.readSelector();
 
             map.set(key, value);
         }
@@ -104,14 +90,11 @@ export class BinaryReader {
     }
 
     public readMethodSelectorsMap(): MethodMap {
-        const map: MethodMap = new Map();
+        const map: MethodMap = new Set();
         const length = this.readU16();
 
         for (let i = 0; i < length; i++) {
-            const key = this.readAddress();
-            const value = this.readMethodSelectors();
-
-            map.set(key, value);
+            map.add(this.readSelector());
         }
 
         return map;

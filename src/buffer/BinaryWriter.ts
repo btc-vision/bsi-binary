@@ -5,7 +5,6 @@ import {
     i32,
     MethodMap,
     PointerStorage,
-    PropertyABIMap,
     Selector,
     SelectorsMap,
     u16,
@@ -128,28 +127,6 @@ export class BinaryWriter {
         this.writeString(value);
     }
 
-    public writeViewSelectorMap(map: SelectorsMap): void {
-        this.writeU16(map.size);
-
-        map.forEach(
-            (value: PropertyABIMap, key: string, _map: Map<string, PropertyABIMap>): void => {
-                this.writeAddress(key);
-                this.writeSelectors(value);
-            },
-        );
-    }
-
-    public writeMethodSelectorsMap(map: MethodMap): void {
-        this.writeU16(map.size);
-
-        map.forEach(
-            (value: Set<Selector>, key: Address, _map: Map<Address, Set<Selector>>): void => {
-                this.writeAddress(key);
-                this.writeMethodSelectorMap(value);
-            },
-        );
-    }
-
     public getBuffer(clear: boolean = true): Uint8Array {
         const buf = new Uint8Array(this.buffer.byteLength);
         for (let i: u32 = 0; i < this.buffer.byteLength; i++) {
@@ -255,14 +232,6 @@ export class BinaryWriter {
 
         value.forEach((selector: Selector, _value: Selector, _set: Set<Selector>): void => {
             this.writeSelector(selector);
-        });
-    }
-
-    private writeSelectors(value: PropertyABIMap): void {
-        this.writeU16(value.size);
-
-        value.forEach((selector: Selector, key: string, _map: Map<string, Selector>): void => {
-            this.writeABISelector(key, selector);
         });
     }
 
