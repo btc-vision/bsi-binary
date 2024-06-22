@@ -14,6 +14,8 @@ import {
     u32,
     u8,
 } from './types/math.js';
+import { DeterministicMap } from '../deterministic/DeterministicMap';
+import { DeterministicSet } from '../deterministic/DeterminisiticSet';
 
 export class BinaryReader {
     private buffer: DataView;
@@ -75,8 +77,12 @@ export class BinaryReader {
         };
     }
 
+    public static stringCompare(a: string, b: string): number {
+        return a.localeCompare(b);
+    }
+
     public readViewSelectorsMap(): SelectorsMap {
-        const map: SelectorsMap = new Map();
+        const map: SelectorsMap = new DeterministicMap(BinaryReader.stringCompare);
         const length = this.readU16();
 
         for (let i = 0; i < length; i++) {
@@ -90,7 +96,7 @@ export class BinaryReader {
     }
 
     public readMethodSelectorsMap(): MethodMap {
-        const map: MethodMap = new Set();
+        const map: MethodMap = new DeterministicSet(BinaryReader.numberCompare);
         const length = this.readU16();
 
         for (let i = 0; i < length; i++) {
@@ -101,7 +107,7 @@ export class BinaryReader {
     }
 
     public readMethodSelectors(): ContractABIMap {
-        const selectors: ContractABIMap = new Set();
+        const selectors: ContractABIMap = new DeterministicSet(BinaryReader.numberCompare);
         const length = this.readU16();
 
         for (let i = 0; i < length; i++) {
@@ -199,15 +205,26 @@ export class BinaryReader {
         return result;
     }
 
-    public readStorage(): Map<Address, PointerStorage> {
+    public static bigintCompare(a: bigint, b: bigint): number {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+
+    public static numberCompare(a: number, b: number): number {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+
+    public readStorage(): DeterministicMap<Address, PointerStorage> {
         const contractsSize: u32 = this.readU32();
-        const storage: Map<Address, PointerStorage> = new Map();
+        const storage: DeterministicMap<Address, PointerStorage> = new DeterministicMap(BinaryReader.stringCompare);
 
         for (let i: u32 = 0; i < contractsSize; i++) {
             const address: Address = this.readAddress();
             const storageSize: u32 = this.readU32();
-
-            const subPointerStorage: Map<bigint, bigint> = new Map();
+            const subPointerStorage: DeterministicMap<bigint, bigint> = new DeterministicMap(BinaryReader.bigintCompare);
 
             for (let j: u32 = 0; j < storageSize; j++) {
                 const keyPointer: bigint = this.readU256();

@@ -1,10 +1,13 @@
+import { DeterministicMap } from '../../deterministic/DeterministicMap';
+import { DeterministicSet } from '../../deterministic/DeterminisiticSet';
+
 export const ADDRESS_BYTE_LENGTH: number = 64;
 
 export type MemorySlotPointer = bigint;
 
 export type MemorySlotData<T> = T;
-export type PointerStorage = Map<MemorySlotPointer, MemorySlotData<bigint>>;
-export type BlockchainStorage = Map<Address, PointerStorage>;
+export type PointerStorage = DeterministicMap<MemorySlotPointer, MemorySlotData<bigint>>;
+export type BlockchainStorage = DeterministicMap<Address, PointerStorage>;
 
 export type Address = string;
 export type i32 = number;
@@ -22,10 +25,10 @@ export interface ABIRegistryItem {
     selector: Selector;
 }
 
-export type ContractABIMap = Set<Selector>;
-export type SelectorsMap = Map<string, Selector>;
+export type ContractABIMap = DeterministicSet<Selector>;
+export type SelectorsMap = DeterministicMap<string, Selector>;
 
-export type MethodMap = Set<Selector>;
+export type MethodMap = DeterministicSet<Selector>;
 
 export const MAX_EVENT_DATA_SIZE: number = 256; // 256 bytes max
 export const MAX_EVENTS: number = 8; // 8 events max per transactions.

@@ -16,6 +16,7 @@ import {
 import { BufferHelper } from '../utils/BufferHelper.js';
 import { BinaryReader } from './BinaryReader.js';
 import { cyrb53a } from '../utils/cyrb53.js';
+import { DeterministicMap } from '../deterministic/DeterministicMap';
 
 export enum BufferDataType {
     U8 = 0,
@@ -152,7 +153,7 @@ export class BinaryWriter {
 
         for (let i: i32 = 0; i < keys.length; i++) {
             const address: Address = keys[i];
-            const slots: Map<u64, u64> = values[i];
+            const slots: DeterministicMap<u64, u64> = values[i];
 
             this.writeAddress(address);
             this.writeU32(slots.size);
