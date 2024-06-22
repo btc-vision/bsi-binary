@@ -14,8 +14,8 @@ import {
     u32,
     u8,
 } from './types/math.js';
-import { DeterministicMap } from '../deterministic/DeterministicMap';
-import { DeterministicSet } from '../deterministic/DeterminisiticSet';
+import { DeterministicMap } from '../deterministic/DeterministicMap.js';
+import { DeterministicSet } from '../deterministic/DeterminisiticSet.js';
 
 export class BinaryReader {
     private buffer: DataView;

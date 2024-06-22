@@ -16,7 +16,7 @@ import {
 import { BufferHelper } from '../utils/BufferHelper.js';
 import { BinaryReader } from './BinaryReader.js';
 import { cyrb53a } from '../utils/cyrb53.js';
-import { DeterministicMap } from '../deterministic/DeterministicMap';
+import { DeterministicMap } from '../deterministic/DeterministicMap.js';
 
 export enum BufferDataType {
     U8 = 0,
