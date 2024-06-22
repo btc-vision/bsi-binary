@@ -47,4 +47,10 @@ export class DeterministicSet<T> {
     public get size(): number {
         return this.elements.length;
     }
+
+    *[Symbol.iterator](): IterableIterator<T> {
+        for (const value of this.elements) {
+            yield value;
+        }
+    }
 }

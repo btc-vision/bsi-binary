@@ -76,4 +76,10 @@ export class DeterministicMap<K, V> {
     public get size(): number {
         return this.map.size;
     }
+
+    *[Symbol.iterator](): IterableIterator<[K, V]> {
+        for (const key of this.#keys) {
+            yield [key, this.map.get(key) as V];
+        }
+    }
 }
