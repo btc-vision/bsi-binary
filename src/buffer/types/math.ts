@@ -1,7 +1,7 @@
 import { DeterministicMap } from '../../deterministic/DeterministicMap';
 import { DeterministicSet } from '../../deterministic/DeterminisiticSet';
 
-export const ADDRESS_BYTE_LENGTH: number = 64;
+export const ADDRESS_BYTE_LENGTH: number = 66;
 
 export type MemorySlotPointer = bigint;
 

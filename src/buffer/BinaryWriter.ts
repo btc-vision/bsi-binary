@@ -40,6 +40,7 @@ export class BinaryWriter {
     }
 
     public writeU8(value: u8): void {
+        if(value > 255) throw new Error('Value is too large.');
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U8);
 
         this.allocSafe(1);
@@ -47,6 +48,8 @@ export class BinaryWriter {
     }
 
     public writeU16(value: u16): void {
+        if(value > 65535) throw new Error('Value is too large.');
+
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U16);
 
         this.allocSafe(2);
@@ -55,6 +58,7 @@ export class BinaryWriter {
     }
 
     public writeU32(value: u32, le: boolean = true): void {
+        if(value > 4294967295) throw new Error('Value is too large.');
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U32);
 
         this.allocSafe(4);
@@ -63,6 +67,8 @@ export class BinaryWriter {
     }
 
     public writeU64(value: u64): void {
+        if(value > 18446744073709551615n) throw new Error('Value is too large.');
+
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U64);
 
         this.allocSafe(8);
@@ -81,6 +87,10 @@ export class BinaryWriter {
     }
 
     public writeU256(bigIntValue: bigint): void {
+        if(bigIntValue > 115792089237316195423570985008687907853269984665640564039457584007913129639935n) {
+            throw new Error('Value is too large.');
+        }
+
         if(this.trackDataTypes) this.selectorDatatype.push(BufferDataType.U256);
 
         this.allocSafe(32);
