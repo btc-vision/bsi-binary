@@ -30,5 +30,5 @@ export type SelectorsMap = DeterministicMap<string, Selector>;
 
 export type MethodMap = DeterministicSet<Selector>;
 
-export const MAX_EVENT_DATA_SIZE: number = 256; // 256 bytes max
+export const MAX_EVENT_DATA_SIZE: number = 352; // 352 bytes max
 export const MAX_EVENTS: number = 8; // 8 events max per transactions.
