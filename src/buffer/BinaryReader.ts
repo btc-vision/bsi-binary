@@ -286,20 +286,6 @@ export class BinaryReader {
         return this.readU8() !== 0;
     }
 
-    public readFloat(): f32 {
-        const value = this.buffer.getFloat32(this.currentOffset, true);
-        this.currentOffset += 4;
-
-        return value;
-    }
-
-    public readDouble(): number {
-        const value = this.buffer.getFloat64(this.currentOffset, true);
-        this.currentOffset += 8;
-
-        return value;
-    }
-
     public readAddress(): Address {
         return this.readString(ADDRESS_BYTE_LENGTH);
     }
