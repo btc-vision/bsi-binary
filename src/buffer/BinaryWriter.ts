@@ -290,6 +290,16 @@ export class BinaryWriter {
         this.writeBytes(value);
     }
 
+    public writeAddressArray(value: Address[]): void {
+        if(value.length > 65535) throw new Error('Array size is too large');
+
+        this.writeU16(value.length);
+
+        for (let i = 0; i < value.length; i++) {
+            this.writeAddress(value[i]);
+        }
+    }
+
     private fromAddress(value: Address): Uint8Array {
         if (value.length > ADDRESS_BYTE_LENGTH) {
             throw new Error('Address is too long');

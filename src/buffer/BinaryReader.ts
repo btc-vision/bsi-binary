@@ -49,6 +49,17 @@ export class BinaryReader {
         return events;
     }
 
+    public readAddressArray(): Address[] {
+        const length = this.readU16();
+        const result: Address[] = new Array<Address>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readAddress();
+        }
+
+        return result;
+    }
+
     public readEvent(): NetEvent {
         const eventType = this.readStringWithLength();
         const eventDataSelector = this.readU64();
