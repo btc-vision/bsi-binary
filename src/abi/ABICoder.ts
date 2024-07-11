@@ -14,8 +14,16 @@ export enum ABIDataTypes {
     BYTES32 = 'BYTES32',
     UINT256 = 'UINT256',
     TUPLE = 'TUPLE',
-    ADDRESS_UINT256_TUPLE = 'ADDRESS_UINT256_TUPLE',
     BYTES = 'BYTES',
+    ADDRESS_UINT256_TUPLE = 'ADDRESS_UINT256_TUPLE',
+    ARRAY_OF_ADDRESSES = 'ARRAY_OF_ADDRESSES',
+    ARRAY_OF_UINT256 = 'ARRAY_OF_UINT256',
+    ARRAY_OF_UINT64 = 'ARRAY_OF_UINT64',
+    ARRAY_OF_UINT32 = 'ARRAY_OF_UINT32',
+    ARRAY_OF_UINT16 = 'ARRAY_OF_UINT16',
+    ARRAY_OF_UINT8 = 'ARRAY_OF_UINT8',
+    ARRAY_OF_STRING = 'ARRAY_OF_STRING',
+    ARRAY_OF_BYTES = 'ARRAY_OF_BYTES',
 }
 
 export class ABICoder {
@@ -64,6 +72,29 @@ export class ABICoder {
                 case ABIDataTypes.UINT64:
                     result.push(byteReader.readU64());
                     break;
+                case ABIDataTypes.ARRAY_OF_ADDRESSES:
+                    result.push(byteReader.readAddressArray());
+                    break;
+                case ABIDataTypes.ARRAY_OF_UINT256:
+                    result.push(byteReader.readU256Array());
+                    break;
+                case ABIDataTypes.ARRAY_OF_UINT64:
+                    result.push(byteReader.readU64Array());
+                    break;
+                case ABIDataTypes.ARRAY_OF_UINT32:
+                    result.push(byteReader.readU32Array());
+                    break;
+                case ABIDataTypes.ARRAY_OF_UINT16:
+                    result.push(byteReader.readU16Array());
+                    break;
+                case ABIDataTypes.ARRAY_OF_UINT8:
+                    result.push(byteReader.readU8Array());
+                    break;
+                case ABIDataTypes.ARRAY_OF_STRING:
+                    result.push(byteReader.readStringArray());
+                    break;
+                case ABIDataTypes.ARRAY_OF_BYTES:
+                    result.push(byteReader.readBytesArray());
             }
         }
 

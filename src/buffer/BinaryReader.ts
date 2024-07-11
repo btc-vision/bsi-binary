@@ -4,8 +4,9 @@ import {
     Address,
     ADDRESS_BYTE_LENGTH,
     ContractABIMap,
-    f32,
-    i32, MAX_EVENT_DATA_SIZE, MAX_EVENTS,
+    i32,
+    MAX_EVENT_DATA_SIZE,
+    MAX_EVENTS,
     MethodMap,
     PointerStorage,
     Selector,
@@ -26,6 +27,22 @@ export class BinaryReader {
         this.buffer = new DataView(bytes.buffer);
     }
 
+    public static stringCompare(a: string, b: string): number {
+        return a.localeCompare(b);
+    }
+
+    public static bigintCompare(a: bigint, b: bigint): number {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+
+    public static numberCompare(a: number, b: number): number {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+
     public setBuffer(bytes: Uint8Array): void {
         this.buffer = new DataView(bytes.buffer);
 
@@ -36,7 +53,7 @@ export class BinaryReader {
         const events: NetEvent[] = [];
         const length = this.readU8();
 
-        if(length > MAX_EVENTS) {
+        if (length > MAX_EVENTS) {
             throw new Error('Too many events to decode.');
         }
 
@@ -60,6 +77,83 @@ export class BinaryReader {
         return result;
     }
 
+    public readU256Array(): bigint[] {
+        const length = this.readU16();
+        const result: bigint[] = new Array<bigint>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readU256();
+        }
+
+        return result;
+    }
+
+    public readU64Array(): bigint[] {
+        const length = this.readU16();
+        const result: bigint[] = new Array<bigint>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readU64();
+        }
+
+        return result;
+    }
+
+    public readU32Array(): u32[] {
+        const length = this.readU16();
+        const result: u32[] = new Array<u32>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readU32();
+        }
+
+        return result;
+    }
+
+    public readU16Array(): u16[] {
+        const length = this.readU16();
+        const result: u16[] = new Array<u16>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readU16();
+        }
+
+        return result;
+    }
+
+    public readU8Array(): u8[] {
+        const length = this.readU16();
+        const result: u8[] = new Array<u8>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readU8();
+        }
+
+        return result;
+    }
+
+    public readStringArray(): string[] {
+        const length = this.readU16();
+        const result: string[] = new Array<string>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readStringWithLength();
+        }
+
+        return result;
+    }
+
+    public readBytesArray(): Uint8Array[] {
+        const length = this.readU16();
+        const result: Uint8Array[] = new Array<Uint8Array>(length);
+
+        for (let i = 0; i < length; i++) {
+            result[i] = this.readBytesWithLength();
+        }
+
+        return result;
+    }
+
     public readEvent(): NetEvent {
         const eventType = this.readStringWithLength();
         const eventDataSelector = this.readU64();
@@ -71,7 +165,7 @@ export class BinaryReader {
     public readBytesWithLength(maxLength: number = 0): Uint8Array {
         const length = this.readU32();
 
-        if(maxLength > 0 && length > maxLength) {
+        if (maxLength > 0 && length > maxLength) {
             throw new Error('Data length exceeds maximum length.');
         }
 
@@ -86,10 +180,6 @@ export class BinaryReader {
             name,
             selector,
         };
-    }
-
-    public static stringCompare(a: string, b: string): number {
-        return a.localeCompare(b);
     }
 
     public readViewSelectorsMap(): SelectorsMap {
@@ -176,7 +266,7 @@ export class BinaryReader {
         const map: Map<Address, Uint8Array[]> = new Map<Address, Uint8Array[]>();
         const size: u8 = this.readU8();
 
-        if(size > 8) {
+        if (size > 8) {
             throw new Error('Too many contract called.');
         }
 
@@ -184,7 +274,7 @@ export class BinaryReader {
             const address: Address = this.readAddress();
             const responseSize: u8 = this.readU8();
 
-            if(responseSize > 10) {
+            if (responseSize > 10) {
                 throw new Error('Too many calls.');
             }
 
@@ -216,26 +306,18 @@ export class BinaryReader {
         return result;
     }
 
-    public static bigintCompare(a: bigint, b: bigint): number {
-        if (a < b) return -1;
-        if (a > b) return 1;
-        return 0;
-    }
-
-    public static numberCompare(a: number, b: number): number {
-        if (a < b) return -1;
-        if (a > b) return 1;
-        return 0;
-    }
-
     public readStorage(): DeterministicMap<Address, PointerStorage> {
         const contractsSize: u32 = this.readU32();
-        const storage: DeterministicMap<Address, PointerStorage> = new DeterministicMap(BinaryReader.stringCompare);
+        const storage: DeterministicMap<Address, PointerStorage> = new DeterministicMap(
+            BinaryReader.stringCompare,
+        );
 
         for (let i: u32 = 0; i < contractsSize; i++) {
             const address: Address = this.readAddress();
             const storageSize: u32 = this.readU32();
-            const subPointerStorage: DeterministicMap<bigint, bigint> = new DeterministicMap(BinaryReader.bigintCompare);
+            const subPointerStorage: DeterministicMap<bigint, bigint> = new DeterministicMap(
+                BinaryReader.bigintCompare,
+            );
 
             for (let j: u32 = 0; j < storageSize; j++) {
                 const keyPointer: bigint = this.readU256();
