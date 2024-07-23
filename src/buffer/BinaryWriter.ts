@@ -389,14 +389,12 @@ export class BinaryWriter {
             throw new Error('Address is too long');
         }
 
-        const bytes: Uint8Array = new Uint8Array(ADDRESS_BYTE_LENGTH);
+        const bytes: Uint8Array = new Uint8Array(value.length + 1);
         for (let i: i32 = 0; i < value.length; i++) {
             bytes[i] = value.charCodeAt(i);
         }
 
-        for (let i: u8 = value.length; i < ADDRESS_BYTE_LENGTH; i++) {
-            bytes[i] = 0;
-        }
+        bytes[value.length] = 0;
 
         return bytes;
     }

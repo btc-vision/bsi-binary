@@ -342,13 +342,10 @@ export class BinaryReader {
 
     public readBytes(length: u32, zeroStop: boolean = false): Uint8Array {
         let bytes: Uint8Array = new Uint8Array(length);
-        this.verifyEnd(this.currentOffset + length);
-
         for (let i: u32 = 0; i < length; i++) {
             const byte: u8 = this.readU8();
             if (zeroStop && byte === 0) {
                 bytes = bytes.slice(0, i);
-                this.currentOffset += length - (i + 1);
                 break;
             }
 

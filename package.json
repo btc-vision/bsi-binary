@@ -1,7 +1,7 @@
 {
     "type": "module",
     "name": "@btc-vision/bsi-binary",
-    "version": "1.0.29",
+    "version": "1.0.35",
     "author": "BlobMaster41",
     "description": "OPNet official buffer serialization and deserialization library",
     "main": "build/index.js",
