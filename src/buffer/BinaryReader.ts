@@ -51,7 +51,7 @@ export class BinaryReader {
 
     public readEvents(): NetEvent[] {
         const events: NetEvent[] = [];
-        const length = this.readU8();
+        const length = this.readU16();
 
         if (length > MAX_EVENTS) {
             throw new Error('Too many events to decode.');
