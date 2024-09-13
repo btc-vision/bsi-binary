@@ -17,13 +17,14 @@ import {
 } from './types/math.js';
 import { DeterministicMap } from '../deterministic/DeterministicMap.js';
 import { DeterministicSet } from '../deterministic/DeterminisiticSet.js';
+import { BufferLike } from '../utils/types.js';
 
 export class BinaryReader {
     private buffer: DataView;
 
     private currentOffset: i32 = 0;
 
-    constructor(bytes: Uint8Array) {
+    constructor(bytes: BufferLike) {
         this.buffer = new DataView(bytes.buffer);
     }
 
@@ -43,7 +44,7 @@ export class BinaryReader {
         return 0;
     }
 
-    public setBuffer(bytes: Uint8Array): void {
+    public setBuffer(bytes: BufferLike): void {
         this.buffer = new DataView(bytes.buffer);
 
         this.currentOffset = 0;

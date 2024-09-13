@@ -7,3 +7,4 @@ export * from './abi/ABICoder.js';
 export * from './utils/cyrb53.js';
 export * from './deterministic/DeterministicMap.js';
 export * from './deterministic/DeterminisiticSet.js';
+export * from './utils/types.js';
