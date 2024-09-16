@@ -1,7 +1,7 @@
 {
-    "type": "module",
     "name": "@btc-vision/bsi-binary",
-    "version": "1.0.39",
+    "type": "module",
+    "version": "1.0.40",
     "author": "BlobMaster41",
     "description": "OPNet official buffer serialization and deserialization library",
     "main": "build/index.js",
@@ -10,8 +10,8 @@
     "exports": {
         ".": {
             "import": "./build/index.js",
-            "require": "./cjs/index.js",
-            "types": "./src/index.ts"
+            "require": "./build/index.js",
+            "types": "./build/index.d.ts"
         }
     },
     "scripts": {
@@ -19,8 +19,7 @@
         "start": "cd build && node index",
         "build": "gulp",
         "test": "jest --runInBand",
-        "setup": "npm npm i && npm run build",
-        "install": "gulp && gulp cjs"
+        "setup": "npm i && npm run build"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
@@ -33,7 +32,9 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@babel/preset-env": "^7.24.3",
+        "@babel/preset-env": "^7.25.4",
+        "@babel/preset-react": "^7.24.7",
+        "@babel/preset-typescript": "^7.24.7",
         "@jest/types": "^29.6.3",
         "@types/debug": "^4.1.12",
         "@types/node": "^22.5.5",
