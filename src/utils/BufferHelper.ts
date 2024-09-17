@@ -54,7 +54,7 @@ export class BufferHelper {
     public static uint8ArrayToPointer(input: Uint8Array): MemorySlotPointer {
         const hex = BufferHelper.uint8ArrayToHex(input);
 
-        return BigInt('0x' + hex) as MemorySlotPointer;
+        return BigInt('0x' + hex);
     }
 
     public static valueToUint8Array(value: bigint): Uint8Array {
