@@ -102,7 +102,7 @@ export class ABICoder {
     public encodePointer(key: string): bigint {
         const hash = this.sha256(key);
         const finalBuffer = Buffer.alloc(BufferHelper.EXPECTED_BUFFER_LENGTH);
-        const selector = hash.slice(0, BufferHelper.EXPECTED_BUFFER_LENGTH); // 32 bytes
+        const selector = hash.subarray(0, BufferHelper.EXPECTED_BUFFER_LENGTH); // 32 bytes
 
         for (let i = 0; i < BufferHelper.EXPECTED_BUFFER_LENGTH; i++) {
             finalBuffer[i] = selector[i];
@@ -132,7 +132,7 @@ export class ABICoder {
     public encodeSelector(selectorIdentifier: string): string {
         // first 4 bytes of sha256 hash of the function signature
         const hash = this.sha256(selectorIdentifier);
-        const selector = hash.slice(0, 4); // 4 bytes
+        const selector = hash.subarray(0, 4); // 4 bytes
 
         return selector.toString('hex');
     }

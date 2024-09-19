@@ -20,7 +20,7 @@ export class DeterministicMap<K, V> {
     }
 
     public keys(): IterableIterator<K> {
-        return this.#keys[Symbol.iterator]();
+        return this.#keys.values();
     }
 
     public values(): IterableIterator<V> {
@@ -37,7 +37,7 @@ export class DeterministicMap<K, V> {
             }
         }
 
-        return Array.from(values)[Symbol.iterator]();
+        return values.values();
     }
 
     public has(key: K): boolean {
@@ -47,7 +47,7 @@ export class DeterministicMap<K, V> {
     public delete(key: K): boolean {
         if (this.map.has(key)) {
             this.map.delete(key);
-            this.#keys = this.#keys.filter(k => k !== key);
+            this.#keys = this.#keys.filter((k) => k !== key);
             return true;
         }
         return false;
@@ -58,7 +58,10 @@ export class DeterministicMap<K, V> {
         this.#keys = [];
     }
 
-    public static fromMap<K, V>(map: Map<K, V>, compareFn: (a: K, b: K) => number): DeterministicMap<K, V> {
+    public static fromMap<K, V>(
+        map: Map<K, V>,
+        compareFn: (a: K, b: K) => number,
+    ): DeterministicMap<K, V> {
         const deterministicMap = new DeterministicMap<K, V>(compareFn);
         for (const [key, value] of map) {
             deterministicMap.set(key, value);
