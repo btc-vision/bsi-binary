@@ -11,10 +11,10 @@ import {
     u8,
 } from './types/math.js';
 
-import { BufferHelper } from '../utils/BufferHelper.js';
-import { BinaryReader } from './BinaryReader.js';
-import { cyrb53a } from '../utils/cyrb53.js';
 import { DeterministicMap } from '../deterministic/DeterministicMap.js';
+import { BufferHelper } from '../utils/BufferHelper.js';
+import { cyrb53a } from '../utils/cyrb53.js';
+import { BinaryReader } from './BinaryReader.js';
 
 export enum BufferDataType {
     U8 = 0,
@@ -226,7 +226,7 @@ export class BinaryWriter {
     }
 
     public getSelectorDataType(): bigint {
-        let hash: bigint = 0n;
+        const hash: bigint = 0n;
 
         if (this.selectorDatatype.length === 0) return hash;
 

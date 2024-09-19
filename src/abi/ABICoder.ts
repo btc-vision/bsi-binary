@@ -27,8 +27,6 @@ export enum ABIDataTypes {
 }
 
 export class ABICoder {
-    constructor() {}
-
     public decodeData(data: Uint8Array, types: ABIDataTypes[]): unknown[] {
         const byteReader = new BinaryReader(data);
         const result: unknown[] = [];
