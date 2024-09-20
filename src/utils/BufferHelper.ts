@@ -25,24 +25,22 @@ export class BufferHelper {
 
     public static hexToUint8Array(input: string): Uint8Array {
         if (input.startsWith('0x')) {
-            input = input.substring(2);
+            input = input.substring(2); // Remove the '0x' prefix
         }
 
         if (input.length % 2 !== 0) {
-            input = '0' + input;
+            input = '0' + input; // Pad with a leading zero if the length is odd
         }
 
         const length = input.length / 2;
         const buffer = new Uint8Array(length);
 
         for (let i = 0; i < length; i++) {
-            buffer[i] = parseInt(input.substring(i * 2, 2), 16);
+            // Use substring(i * 2, i * 2 + 2) to replace substr(i * 2, 2)
+            buffer[i] = parseInt(input.substring(i * 2, i * 2 + 2), 16);
         }
 
         return buffer;
-
-        //const buf = Buffer.from(input, 'hex');
-        //return new Uint8Array(buf, 0, buf.byteLength);
     }
 
     public static pointerToUint8Array(pointer: MemorySlotPointer): Uint8Array {
