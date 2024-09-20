@@ -25,7 +25,7 @@ export class BufferHelper {
 
     public static hexToUint8Array(input: string): Uint8Array {
         if (input.startsWith('0x')) {
-            input = input.substr(2);
+            input = input.substring(2);
         }
 
         if (input.length % 2 !== 0) {
@@ -36,7 +36,7 @@ export class BufferHelper {
         const buffer = new Uint8Array(length);
 
         for (let i = 0; i < length; i++) {
-            buffer[i] = parseInt(input.substr(i * 2, 2), 16);
+            buffer[i] = parseInt(input.substring(i * 2, 2), 16);
         }
 
         return buffer;
