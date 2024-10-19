@@ -9,6 +9,9 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+## ⚠️ DEPRECATION NOTICE ⚠️
+This package have been merged with @btc-vision/transaction instead.
+
 ## Introduction
 
 This package contains the required classes to be able to easily create and read any sort of calldata for BSI transactions.
